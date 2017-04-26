@@ -37,11 +37,25 @@
     [btn1 addTarget:self action:@selector(click_NSThread) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn1];
     
+    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn2.frame = CGRectMake(100, 200, 100, 40);
+    [btn2 setTitle:@"GCD" forState:UIControlStateNormal];
+    [btn2 setBackgroundColor:[UIColor blueColor]];
+    [btn2 addTarget:self action:@selector(click_GCD) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn2];
+    
     _condition = [[NSCondition alloc] init];
     _lock = [[NSLock alloc] init];
 }
 
-
+- (void)click_GCD {
+    
+    //GCD 串行队列
+    
+    
+    //GCD 并行队列
+    
+}
 
 
 - (void)click_pThread {
