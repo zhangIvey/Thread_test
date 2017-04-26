@@ -13,7 +13,6 @@
 		2CD2FE4B1EAFA22700192CE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE491EAFA22700192CE0 /* Main.storyboard */; };
 		2CD2FE4D1EAFA22700192CE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */; };
 		2CD2FE501EAFA22700192CE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE4E1EAFA22700192CE0 /* LaunchScreen.storyboard */; };
-		2CD2FE591EAFA2B700192CE0 /* TestFor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD2FE581EAFA2B700192CE0 /* TestFor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,8 +26,6 @@
 		2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CD2FE4F1EAFA22700192CE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2CD2FE511EAFA22700192CE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2CD2FE571EAFA2B700192CE0 /* TestFor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFor.h; sourceTree = "<group>"; };
-		2CD2FE581EAFA2B700192CE0 /* TestFor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +62,6 @@
 				2CD2FE441EAFA22700192CE0 /* AppDelegate.m */,
 				2CD2FE461EAFA22700192CE0 /* ViewController.h */,
 				2CD2FE471EAFA22700192CE0 /* ViewController.m */,
-				2CD2FE571EAFA2B700192CE0 /* TestFor.h */,
-				2CD2FE581EAFA2B700192CE0 /* TestFor.m */,
 				2CD2FE491EAFA22700192CE0 /* Main.storyboard */,
 				2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */,
 				2CD2FE4E1EAFA22700192CE0 /* LaunchScreen.storyboard */,
@@ -158,7 +153,6 @@
 				2CD2FE481EAFA22700192CE0 /* ViewController.m in Sources */,
 				2CD2FE451EAFA22700192CE0 /* AppDelegate.m in Sources */,
 				2CD2FE421EAFA22700192CE0 /* main.m in Sources */,
-				2CD2FE591EAFA2B700192CE0 /* TestFor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +309,7 @@
 				2CD2FE561EAFA22700192CE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
