@@ -51,9 +51,16 @@
 - (void)click_GCD {
     
     //GCD 串行队列
-    
+    dispatch_sync(dispatch_get_main_queue(), ^(){
+       //在主线程队列中开启同步任务
+        
+    });
     
     //GCD 并行队列
+    dispatch_async(dispatch_get_global_queue(0, 0), ^(){
+        //在全局队列中开启异步任务
+        
+    });
     
 }
 
