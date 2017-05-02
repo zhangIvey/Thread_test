@@ -78,10 +78,20 @@
     
     _condition = [[NSCondition alloc] init];
     _lock = [[NSLock alloc] init];
+    
+    
+    
 }
 
 - (void)click_GCD_group {
+    
+    
     NSLog(@"开始gcd_group");
+    
+    //dispatch_group_t
+    
+    
+    //GCD - 解决场景：执行完多个任务之后才执行某一任务
     
 //    dispatch_queue_t queue = dispatch_queue_create("queue.group", NULL); //一个串行队列
     dispatch_queue_t queue = dispatch_queue_create("queue.group", DISPATCH_QUEUE_CONCURRENT); //一个并行队列
@@ -104,19 +114,44 @@
     
     dispatch_group_notify(groupGCD, queue, ^{  //线程组的监听通知
         
+        NSLog(@"回调之后，所在线程还是子线程, 这个子线程是以上group中开辟的线程");
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSLog(@"开始 ：task3");
-            for (int i = 20; i <= 30 ; i ++) {
+            for (int i = 30; i <= 40 ; i ++) {
                 sleep(1);
                 NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+                if (i == 40) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"回到主线程");
+                    });
+                }
             }
         });
         
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"task 1, task 2 ,执行完成回到主线程");
-//        });
-        
     });
+    
+    
+    //GCD - 解决场景：执行完多个异步任务之后才执行某一任务
+    
+    //GCD - dispatch_once 用来实现单例；
+    
+    //GCD - dispatch_after 执行延时操作；
+    
+    //NSOperation
+    
+    //NSOperation - 的两个子类的使用
+    
+    //NSOperation - NSInvocationOperation
+    
+    //NSOperation - NSBlockOperation
+    
+    //NSOperation - 自定义使用实现子线程操作 - 同步任务
+    
+    //NSOperation - 自定义使用实现子线程操作 - 异步任务
+    
+    //NSOperation - 控制线程并发数
+    
+    //NSOperation - 线程依赖
     
 }
 
@@ -419,9 +454,9 @@
     
     
     
-    //GCD - 解决场景：执行完多个任务之后才执行某一任务
     
-    //GCD - 解决场景：执行完多个异步任务之后才执行某一任务
+    
+    
     
 }
 
