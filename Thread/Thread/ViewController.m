@@ -69,8 +69,55 @@
     [btn4 addTarget:self action:@selector(click_GCD_Parallel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn4];
     
+    UIButton *btn5 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn5.frame = CGRectMake(100, 350, 100, 40);
+    [btn5 setTitle:@"GCD_group" forState:UIControlStateNormal];
+    [btn5 setBackgroundColor:[UIColor blueColor]];
+    [btn5 addTarget:self action:@selector(click_GCD_group) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn5];
+    
     _condition = [[NSCondition alloc] init];
     _lock = [[NSLock alloc] init];
+}
+
+- (void)click_GCD_group {
+    NSLog(@"开始gcd_group");
+    
+//    dispatch_queue_t queue = dispatch_queue_create("queue.group", NULL); //一个串行队列
+    dispatch_queue_t queue = dispatch_queue_create("queue.group", DISPATCH_QUEUE_CONCURRENT); //一个并行队列
+    dispatch_group_t groupGCD = dispatch_group_create(); //一个线程组
+    dispatch_group_async(groupGCD, queue, ^{
+        NSLog(@"开始 ：task1");
+        for (int i = 10; i <= 20 ; i ++) {
+            sleep(1);
+            NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    });
+    
+    dispatch_group_async(groupGCD, queue, ^{
+        NSLog(@"开始 ：task2");
+        for (int i = 20; i <= 30 ; i ++) {
+            sleep(1);
+            NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    });
+    
+    dispatch_group_notify(groupGCD, queue, ^{  //线程组的监听通知
+        
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSLog(@"开始 ：task3");
+            for (int i = 20; i <= 30 ; i ++) {
+                sleep(1);
+                NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+            }
+        });
+        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"task 1, task 2 ,执行完成回到主线程");
+//        });
+        
+    });
+    
 }
 
 - (void)click_GCD_Parallel{
