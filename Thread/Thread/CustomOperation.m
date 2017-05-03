@@ -29,12 +29,14 @@
 - (void) main {
     
     //NSOperation - 自定义使用实现子线程操作 - 同步任务
+    /*
+    NSLog(@"线程名字 = %@",self.name);
+    for (int i = 0; i <= 10 ; i ++) {
+        sleep(1);
+        NSLog(@"自定义线程 %@——%d",self.name,i);
+    }
+     */
     
-//    NSLog(@"线程名字 = %@",self.name);
-//    for (int i = 0; i <= 10 ; i ++) {
-//        sleep(1);
-//        NSLog(@"自定义线程 ——%d",i);
-//    }
     
     //NSOperation - 自定义使用实现子线程操作 - 异步任务
     NSLog(@"开始任务");
@@ -51,14 +53,17 @@
         self.over = YES;
     });
     
-    //解决办法
-    if (!self.over && !self.isCancelled) {
-        NSLog(@"维持线程运行");
+    //解决办法 : 使用 NSRunLoop 进行循环执行
+    /*
+        通过 NSRunLoop 的控制线程，等待异步任务完成之后再让该线程执行完成。
+     */
+    while (!self.over && !self.isCancelled) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
     
     
     NSLog(@"结束任务");
+    
 }
 
 @end

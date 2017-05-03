@@ -26,7 +26,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     //用来检测主线程是否堵塞
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 50)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 80)];
     textView.backgroundColor = [UIColor grayColor];
     textView.editable = NO;
     textView.text = @"adsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfjdsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfjdsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfjdsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfjdsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfjdsfasdfjeiowfjaiosdjfeiaow fjiaewoj fioeaj fioadsjfioejioasjfdioafjeioajioejaiofjeaiflejaofjdioasjfioejfaioejaioejfioajfioaejfoiajfoiaejfoaiejfiodsioafjeioafjidjafioejafwfaewfeaffdagteavdtgaefgewarefat4eagvdate4fear3wfdsareawfeasghrjhtouy7lil;giu86jmdm,uyfisbxfawrefzsgdu5uzfzhes45ujzgv∂ƒ≈gerwhyhndfzvdsghzestjuyjmnuyliu9ljvhmhxrfgts3y5rtjmgh,hjylot78iyujsrghfj";
@@ -149,11 +149,40 @@
     queue.name = @"自定义线程的所在队列";
     [queue setMaxConcurrentOperationCount:2];
     
+    
+    
+    //NSOperation - 线程依赖 Dependency(依赖)
+    /*
+     添加上依赖之后，两个线程就有了依赖关系，举例说明， A 设置了依赖 B ，带代码执行阶段时， 只有当 B 执行完之后才会执行 A；
+     
+     应用场景：
+     在实际开发过程中，任务3 之后再任务1和任务2完成之后才能执行就可以使用依赖关系
+     
+     注意事项：
+     再设置依赖关系的时候要注意不要添加依赖关系形成闭环，出现互相依赖的情况，会导致程序不执行；
+     */
+    [operation1 addDependency:operation5];
+    [operation5 addDependency:operation2];
+    [operation2 addDependency:operation4];
+    [operation4 addDependency:operation3];
+//    [operation3 addDependency:operation1];  这一点一定要注意，千万要捋顺彼此的依赖关系
+    
+    //一对多的依赖关系
+    /*
+        只有当多个有依赖的任务执行完成之后才会执行
+     */
+//    [operation1 addDependency:operation5];
+//    [operation1 addDependency:operation2];
+//    [operation2 addDependency:operation4];
+//    [operation4 addDependency:operation3];
+    
+    
     [queue addOperation:operation1];
-//    [queue addOperation:operation2];
-//    [queue addOperation:operation3];
-//    [queue addOperation:operation4];
-//    [queue addOperation:operation5];
+    [queue addOperation:operation2];
+    [queue addOperation:operation3];
+    [queue addOperation:operation4];
+    [queue addOperation:operation5];
+    
     
     
 }
@@ -523,7 +552,7 @@
     });
    
     
-    //NSOperation - 线程依赖
+    
     
 }
 
