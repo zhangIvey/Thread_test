@@ -139,8 +139,22 @@
         个人解读：
         所谓的自定义线程就是在继承 NSOperation 之后，在类内部设置好该类要执行的特定任务，也就是说自定线程，自定义的部分就是明确该线程要执行的操作是什么。
      */
-    CustomOperation *operation = [[CustomOperation alloc] initWithName:@"自定义线程一"];
-    [operation start];
+    CustomOperation *operation1 = [[CustomOperation alloc] initWithName:@"自定义线程一"];
+    CustomOperation *operation2 = [[CustomOperation alloc] initWithName:@"自定义线程二"];
+    CustomOperation *operation3 = [[CustomOperation alloc] initWithName:@"自定义线程三"];
+    CustomOperation *operation4 = [[CustomOperation alloc] initWithName:@"自定义线程四"];
+    CustomOperation *operation5 = [[CustomOperation alloc] initWithName:@"自定义线程五"];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.name = @"自定义线程的所在队列";
+    [queue setMaxConcurrentOperationCount:2];
+    
+    [queue addOperation:operation1];
+//    [queue addOperation:operation2];
+//    [queue addOperation:operation3];
+//    [queue addOperation:operation4];
+//    [queue addOperation:operation5];
+    
     
 }
 
@@ -507,11 +521,7 @@
         });
         
     });
-    
-    
-    //NSOperation - 自定义使用实现子线程操作 - 同步任务
-    
-    //NSOperation - 自定义使用实现子线程操作 - 异步任务
+   
     
     //NSOperation - 线程依赖
     
