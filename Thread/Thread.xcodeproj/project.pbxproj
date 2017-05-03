@@ -13,6 +13,8 @@
 		2CD2FE4B1EAFA22700192CE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE491EAFA22700192CE0 /* Main.storyboard */; };
 		2CD2FE4D1EAFA22700192CE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */; };
 		2CD2FE501EAFA22700192CE0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CD2FE4E1EAFA22700192CE0 /* LaunchScreen.storyboard */; };
+		75ADD2431EB9842200F12409 /* ShareObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 75ADD2421EB9842200F12409 /* ShareObject.m */; };
+		75ADD2481EB9C8F500F12409 /* CustomOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 75ADD2471EB9C8F500F12409 /* CustomOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,10 @@
 		2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2CD2FE4F1EAFA22700192CE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2CD2FE511EAFA22700192CE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75ADD2411EB9842200F12409 /* ShareObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareObject.h; sourceTree = "<group>"; };
+		75ADD2421EB9842200F12409 /* ShareObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareObject.m; sourceTree = "<group>"; };
+		75ADD2461EB9C8F500F12409 /* CustomOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomOperation.h; sourceTree = "<group>"; };
+		75ADD2471EB9C8F500F12409 /* CustomOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,10 @@
 				2CD2FE441EAFA22700192CE0 /* AppDelegate.m */,
 				2CD2FE461EAFA22700192CE0 /* ViewController.h */,
 				2CD2FE471EAFA22700192CE0 /* ViewController.m */,
+				75ADD2411EB9842200F12409 /* ShareObject.h */,
+				75ADD2421EB9842200F12409 /* ShareObject.m */,
+				75ADD2461EB9C8F500F12409 /* CustomOperation.h */,
+				75ADD2471EB9C8F500F12409 /* CustomOperation.m */,
 				2CD2FE491EAFA22700192CE0 /* Main.storyboard */,
 				2CD2FE4C1EAFA22700192CE0 /* Assets.xcassets */,
 				2CD2FE4E1EAFA22700192CE0 /* LaunchScreen.storyboard */,
@@ -152,7 +162,9 @@
 			files = (
 				2CD2FE481EAFA22700192CE0 /* ViewController.m in Sources */,
 				2CD2FE451EAFA22700192CE0 /* AppDelegate.m in Sources */,
+				75ADD2431EB9842200F12409 /* ShareObject.m in Sources */,
 				2CD2FE421EAFA22700192CE0 /* main.m in Sources */,
+				75ADD2481EB9C8F500F12409 /* CustomOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

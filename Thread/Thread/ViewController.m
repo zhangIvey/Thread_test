@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 #import <pthread.h>
+#import "ShareObject.h"
+#import "CustomOperation.h"
 
 @interface ViewController ()
 
@@ -32,7 +34,7 @@
     
     //第一种方式 pThread
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(100, 100, 100, 40);
+    btn.frame = CGRectMake(40, 100, 100, 40);
     [btn setTitle:@"pThread" forState:UIControlStateNormal];
     [btn setBackgroundColor:[UIColor blueColor]];
     [btn addTarget:self action:@selector(click_pThread) forControlEvents:UIControlEventTouchUpInside];
@@ -40,7 +42,7 @@
     
     //第二种方式 NSThread
     UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn1.frame = CGRectMake(100, 150, 100, 40);
+    btn1.frame = CGRectMake(40, 150, 100, 40);
     [btn1 setTitle:@"NSThread" forState:UIControlStateNormal];
     [btn1 setBackgroundColor:[UIColor blueColor]];
     [btn1 addTarget:self action:@selector(click_NSThread) forControlEvents:UIControlEventTouchUpInside];
@@ -48,7 +50,7 @@
     
     //问题 ： 当多个线程执行某一块相同代码，需要线程锁进行保护
     UIButton *btn3 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn3.frame = CGRectMake(100, 200, 100, 40);
+    btn3.frame = CGRectMake(40, 200, 100, 40);
     [btn3 setTitle:@"线程锁" forState:UIControlStateNormal];
     [btn3 setBackgroundColor:[UIColor blueColor]];
     [btn3 addTarget:self action:@selector(click_lock) forControlEvents:UIControlEventTouchUpInside];
@@ -56,44 +58,358 @@
     
     //第三种方式 GCD
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn2.frame = CGRectMake(100, 250, 100, 40);
+    btn2.frame = CGRectMake(40, 250, 100, 40);
     [btn2 setTitle:@"GCD串行" forState:UIControlStateNormal];
     [btn2 setBackgroundColor:[UIColor blueColor]];
     [btn2 addTarget:self action:@selector(click_GCD_serial) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn2];
     
     UIButton *btn4 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn4.frame = CGRectMake(100, 300, 100, 40);
+    btn4.frame = CGRectMake(40, 300, 100, 40);
     [btn4 setTitle:@"GCD并行" forState:UIControlStateNormal];
     [btn4 setBackgroundColor:[UIColor blueColor]];
     [btn4 addTarget:self action:@selector(click_GCD_Parallel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn4];
     
     UIButton *btn5 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn5.frame = CGRectMake(100, 350, 100, 40);
+    btn5.frame = CGRectMake(40, 350, 100, 40);
     [btn5 setTitle:@"GCD_group" forState:UIControlStateNormal];
     [btn5 setBackgroundColor:[UIColor blueColor]];
     [btn5 addTarget:self action:@selector(click_GCD_group) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn5];
     
+    UIButton *btn6 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn6.frame = CGRectMake(40, 400, 100, 40);
+    [btn6 setTitle:@"GCD_once" forState:UIControlStateNormal];
+    [btn6 setBackgroundColor:[UIColor blueColor]];
+    [btn6 addTarget:self action:@selector(click_GCD_once) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn6];
+    
+    UIButton *btn7 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn7.frame = CGRectMake(40, 450, 100, 40);
+    [btn7 setTitle:@"GCD_after" forState:UIControlStateNormal];
+    [btn7 setBackgroundColor:[UIColor blueColor]];
+    [btn7 addTarget:self action:@selector(click_GCD_after) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn7];
+    
+    
+    //第四种方式 ：NSOperation
+    /*
+        NSOperation 是抽象类，所以要用子类来进行线程使用；目前是三种方式：
+        1：NSInvocationOperation
+        2：NSBlockOperation
+        3：创建子类继承自 NSOperation
+     */
+    // NSOperation - NSInvocationOperation
+    UIButton *btn8 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn8.frame = CGRectMake(40 + 100 + 20, 100, 150, 40);
+    [btn8 setTitle:@"Operation-Invocation" forState:UIControlStateNormal];
+    [btn8 setBackgroundColor:[UIColor blueColor]];
+    [btn8 addTarget:self action:@selector(click_NSOperation_InvocationOperation) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn8];
+    
+    // NSOperation - NSBlockOperation
+    UIButton *btn9 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn9.frame = CGRectMake(40 + 100 + 20, 150, 150, 40);
+    [btn9 setTitle:@"Operation-Block" forState:UIControlStateNormal];
+    [btn9 setBackgroundColor:[UIColor blueColor]];
+    [btn9 addTarget:self action:@selector(click_NSOperation_blockOperation) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn9];
+    
+    // NSOperation - 自定义线程使用
+    UIButton *btn10 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn10.frame = CGRectMake(40 + 100 + 20, 200, 150, 40);
+    [btn10 setTitle:@"Operation-custom" forState:UIControlStateNormal];
+    [btn10 setBackgroundColor:[UIColor blueColor]];
+    [btn10 addTarget:self action:@selector(click_NSOperation_custom) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btn10];
+    
+    
     _condition = [[NSCondition alloc] init];
     _lock = [[NSLock alloc] init];
     
     
+}
+
+- (void) click_NSOperation_custom {
+    
+    NSLog(@"主线程线程");
+    //NSOperation - 自定义线程  - CustomOperation
+    /*
+        个人解读：
+        所谓的自定义线程就是在继承 NSOperation 之后，在类内部设置好该类要执行的特定任务，也就是说自定线程，自定义的部分就是明确该线程要执行的操作是什么。
+     */
+    CustomOperation *operation = [[CustomOperation alloc] initWithName:@"自定义线程一"];
+    [operation start];
     
 }
 
-- (void)click_GCD_group {
+- (void) click_NSOperation_blockOperation {
+
+    NSLog(@"主线程线程");
+    
+    //NSOperation - NSBlockOperation
+    /*
+     
+     NSBlockOperation 两种方式存放任务代码
+        1：类方法 - blockOperationWithBlock
+        2：实例方法 - addExecutionBlock
+     
+     
+     注意事项： 
+         1：单独使用 NSBlockOperation 设置一个 addExecutionBlock 不会开启新线程，会在主线程中执行，造成主线程堵塞；
+         2：单独使用 NSBlockOperation 中的 addExecutionBlock 方式设置任务时候，任务除在主线程执行之外，还会开启新的子线程来执行其他任务。但还是会造成主线程的堵塞；
+         2：创建 NSBlockOperation 对象之后需要手动开启 start ；
+         3：此时要结合 NSOperationQueue 组合使用；（衍生出一个问题：GCD , operation 都体现出了线程队列的概念，队列对多线程来说为什么如此重要？）
+         4：在和 NSOperationQueue 组合使用时，不用再通过 start 进行开启；
+     
+     
+     推荐实现组合两种： 都不会主线程的堵塞
+        第一种 ：
+        1 ：NSBlockOperation 实例化一个对象；
+        2 ：使用 addExecutionBlock 添加要执行的任务代码；可以添加多个；
+        3 ：创建 NSOperationQueue 实例
+        4 ：在 NSOperationQueue 实例中添加 NSBlockOperation 实例
+        
+        优缺点：
+        （优点）1：不用创建很多 NSBlockOperation 对象，在一个对象添加多个任务的 block 代码；
+        （优点）2：会根据 NSBlockOperation 中添加的 block 块数量开启相应多的子线程执行任务；（需要思考的问题：为什么会根据 block 开启子线程？是不是和 block 的实现原理有关，或者和其特殊属性有关？）
+        （缺点）3：通过 NSOperationQueue 的函数 setMaxConcurrentOperationCount 控制并发数是不生效的；
+     
+     
+        第二种 ： 
+        1 ：NSBlockOperation 实例化多个对象；
+        2 ：在每个 NSBlockOperation 实例对象中设置任务的 block 代码；
+        3 ：创建 NSOperationQueue 实例
+        4 ：在 NSOperationQueue 实例中添加所有要使用的 NSBlockOperation 实例
+        5 ：不要再使用 start 进行启动了
+     
+        优缺点：
+        （优点）1：可以通过 NSOperationQueue 的函数 setMaxConcurrentOperationCount 控制并发数；
+        （优点）2：会根据 NSBlockOperation 的 setMaxConcurrentOperationCount 设置数量开启相应多的子线程执行任务；
+        （缺点）3：需要为每一个任务的 block 块创建一个 NSBlockOperation 实例；
+     */
+    
+    [NSBlockOperation blockOperationWithBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"类方法 blockOperation - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    
+    
+    NSBlockOperation *blockOperation = [[NSBlockOperation alloc] init];
+    blockOperation.name = @"blockOperation";
+    [blockOperation addExecutionBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperation - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    [blockOperation addExecutionBlock:^{
+        for (int i = 20; i <= 30 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperation - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    [blockOperation addExecutionBlock:^{
+        for (int i = 30; i <= 40 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperation - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    
+//    [blockOperation start];
+    
+    
+    
+    
+    NSBlockOperation *blockOperationA = [[NSBlockOperation alloc] init];
+    blockOperationA.name = @"blockOperationA";
+    [blockOperationA addExecutionBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperationA - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    NSBlockOperation *blockOperationB = [[NSBlockOperation alloc] init];
+    blockOperationB.name = @"blockOperationB";
+    [blockOperationB addExecutionBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperationB - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    NSBlockOperation *blockOperationC = [[NSBlockOperation alloc] init];
+    blockOperationC.name = @"blockOperationC";
+    [blockOperationC addExecutionBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"blockOperationC - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    
+    NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
+    [operationQueue setMaxConcurrentOperationCount:2];
+    //方式一
+    [operationQueue addOperation:blockOperation];
+
+    
+    
+    //方式二
+    //    [operationQueue addOperation:blockOperationA];
+    //    [operationQueue addOperation:blockOperationB];
+    //    [operationQueue addOperation:blockOperationC];
+    
+}
+
+
+- (void) click_NSOperation_InvocationOperation {
+    
+    NSLog(@"主线程线程");
+    
+    //NSOperation - NSInvocationOperation
+    /*
+     NSInvocationOperation ： 可以理解为是一个为 @selector 包装上任务特性，能够在子线程中执行；
+     
+        注意事项：
+        1：单独使用 NSInvocationOperation 不会开启新线程，会在主线程中执行，造成主线程堵塞；
+        2：创建 NSInvocationOperation 对象之后需要手动开启 start ；
+        3：此时要结合 NSOperationQueue 组合使用；（衍生出一个问题：GCD , operation 都体现出了线程队列的概念，队列对多线程来说为什么如此重要？）
+        4：在和 NSOperationQueue 组合使用时，不用再通过 start 进行开启；
+     */
+    
+    NSInvocationOperation *InvocationOperationA = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run_invocationOperation) object:nil];
+    InvocationOperationA.name = @"operation - invocationA";
+    
+    NSInvocationOperation *InvocationOperationB = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run_invocationOperation) object:nil];
+    InvocationOperationB.name = @"operation - invocationB";
+    
+    NSInvocationOperation *InvocationOperationC = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run_invocationOperation) object:nil];
+    InvocationOperationC.name = @"operation - invocationC";
+    
+    NSInvocationOperation *InvocationOperationD = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run_invocationOperation) object:nil];
+    InvocationOperationD.name = @"operation - invocationD";
+    
+    NSInvocationOperation *InvocationOperationE = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(run_invocationOperation) object:nil];
+    InvocationOperationE.name = @"operation - invocationE";
+    
+    
+    //启动任务 ：NSInvocationOperation 在和 NSOperationQueue 组合使用时，不需要使用 start
+    //    [InvocationOperationA start];
+    //    [InvocationOperationB start];
+    //    [InvocationOperationC start];
+    //    [InvocationOperationD start];
+    
+    //NSOperationQueue - 线程队列
+    NSOperationQueue *operQueue = [[NSOperationQueue alloc] init];
+    
+    operQueue.name = @"oper_Queue";   //设置队列名称
+    
+    [operQueue setMaxConcurrentOperationCount:2]; //设置队列中允许的最大线程并发数
+    
+    
+    //判断任务的执行状态
+    if (InvocationOperationA.isExecuting) {
+        NSLog(@"InvocationOperationA 是执行");
+    }else{
+        NSLog(@"InvocationOperationA 还未执行");
+    }
+
+    
+    /*
+     NSOperationQueue - 两种在队列中添加事务的方式；
+        1 ： addOperation
+        2 ： addOperationWithBlock
+     */
+    //在队列中添加要执行的操作或者任务；
+    [operQueue addOperation:InvocationOperationA];
+    [operQueue addOperation:InvocationOperationB];
+    [operQueue addOperation:InvocationOperationC];
+    [operQueue addOperation:InvocationOperationD];
+    [operQueue addOperation:InvocationOperationE];
+    
+    [operQueue addOperationWithBlock:^{
+        for (int i = 0; i <= 10 ; i ++) {
+            sleep(1);
+            NSLog(@"Block - 当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+        }
+    }];
+    
+}
+
+- (void) run_invocationOperation {
+    
+    for (int i = 0; i <= 10 ; i ++) {
+        sleep(1);
+        NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
+    }
+    
+}
+
+
+- (void) click_GCD_after {
+    
+    //GCD - dispatch_after 执行延时操作；——不会堵塞线程
+    /*
+        参数：
+        DISPATCH_TIME_NOW ： 从什么时间开始延时（从当前时间开始延时）
+        (int64_t)(20 * NSEC_PER_SEC) ：延时时长（ NSEC_PER_SEC 以秒为单位）
+        dispatch_get_main_queue() ： 指定所在的执行队列
+     */
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"执行延迟操作");
+    });
+    
+}
+
+
+- (void) click_GCD_once {
+    
+    //GCD - dispatch_once 用来实现单例；
+    ShareObject *object = [ShareObject initWithName:@"自定义单例"];
+    NSLog(@"object = %@", object);
+    
+    //GCD - 使用 dispatch_once 控制代码只执行一次
+    /*
+        注意事项：
+        1：必须要用 static 进行修饰；
+     */
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLog(@"这段代码只会执行一次");
+    
+    });
+    
+}
+
+- (void) click_GCD_group {
     
     
     NSLog(@"开始gcd_group");
     
-    //dispatch_group_t
+    // dispatch_group_t ：线程组
     
     
     //GCD - 解决场景：执行完多个任务之后才执行某一任务
     
 //    dispatch_queue_t queue = dispatch_queue_create("queue.group", NULL); //一个串行队列
+    /*
+        执行结果：
+     
+        情况一：线程组添加到串行队列中；
+        1：系统会开辟一条新的线程；
+        2：在线程组中异步任务（异步任务中的代码都是同步执行的代码）会在新开辟的线程中 按照顺序依次进行执行；
+        3：在dispatch_group_notify监听到回调之后，此时还在子线程中；
+        4：不会造成主线程堵塞；
+     
+        情况二：线程组添加到并行队列中
+        1：系统会为每个异步任务开辟一条子线程；
+        2：每个任务在开辟的子线程中执行；
+        3：在dispatch_group_notify监听到回调之后，此时还在某条子线程中；
+        4：不会造成主线程堵塞；
+     */
+    /*
     dispatch_queue_t queue = dispatch_queue_create("queue.group", DISPATCH_QUEUE_CONCURRENT); //一个并行队列
     dispatch_group_t groupGCD = dispatch_group_create(); //一个线程组
     dispatch_group_async(groupGCD, queue, ^{
@@ -129,28 +445,73 @@
         });
         
     });
+    */
+    //GCD - 解决场景：执行完多个异步任务之后才执行某一任务 （举例：在异步任务中发起多个获取网络图片的异步请求，等到图片都获取成功之后再进行UI界面的刷新）
+    /*
+        这种问题使用 dispatch_group_enter(grpupT);来解决，dispatch_group_enter 和 dispatch_group_leave 必须要成对出现；
+        dispatch_group_enter ： 使用一种手动的方式将另外一个 block 以不同于 dispatch_group_async 的方式添加到线程组中。
+        dispatch_group_leave ： 手动指示一个 block 块执行完毕。以一种不用于 dispatch_group_async 的方式离开线程组
+     */
+    dispatch_queue_t queueT = dispatch_queue_create("group.queue", DISPATCH_QUEUE_CONCURRENT);//一个并发队列
+    dispatch_group_t grpupT = dispatch_group_create();//一个线程组
+    
+    dispatch_group_async(grpupT, queueT, ^{
+        NSLog(@"group——当前线程一");
+        //模仿网络请求代码
+        dispatch_group_enter(grpupT);
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for (int i = 0; i < 10; i++) {
+                [NSThread sleepForTimeInterval:1];
+                NSLog(@"网络图片请求中 ···%d", i);
+            }
+            dispatch_group_leave(grpupT);
+        });
+        
+    });
+    
+    dispatch_group_async(grpupT, queueT, ^{
+        NSLog(@"group——当前线程二");
+        //模仿网络请求代码
+        dispatch_group_enter(grpupT);
+        
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for (int i = 0; i < 10; i++) {
+                [NSThread sleepForTimeInterval:1];
+                NSLog(@"网络图片2请求中 ···2_%d", i);
+            }
+            dispatch_group_leave(grpupT);
+        });
+        
+    });
+    
+    dispatch_group_async(grpupT, queueT, ^{
+        NSLog(@"group——当前线程三");
+        //模仿网络请求代码
+        dispatch_group_enter(grpupT);
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for (int i = 0; i < 10; i++) {
+                [NSThread sleepForTimeInterval:1];
+                NSLog(@"网络图片3请求中 ···3_%d", i);
+            }
+             dispatch_group_leave(grpupT);
+        });
+       
+    });
     
     
+    dispatch_group_notify(grpupT, queueT, ^{
+        
+        NSLog(@"此时还是在子线程中");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"回到主线程");
+        });
+        
+    });
     
-    //GCD - 解决场景：执行完多个异步任务之后才执行某一任务
-    
-    //GCD - dispatch_once 用来实现单例；
-    
-    //GCD - dispatch_after 执行延时操作；
-    
-    //NSOperation
-    
-    //NSOperation - 的两个子类的使用
-    
-    //NSOperation - NSInvocationOperation
-    
-    //NSOperation - NSBlockOperation
     
     //NSOperation - 自定义使用实现子线程操作 - 同步任务
     
     //NSOperation - 自定义使用实现子线程操作 - 异步任务
-    
-    //NSOperation - 控制线程并发数
     
     //NSOperation - 线程依赖
     
