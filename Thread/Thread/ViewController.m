@@ -11,10 +11,13 @@
 #import "ShareObject.h"
 #import "CustomOperation.h"
 
+#import "TicketManager.h"
+
 @interface ViewController ()
 
-@property(nonatomic, retain) NSCondition *condition; //用于对线程进行加锁保护
-@property(nonatomic, retain) NSLock *lock; //用于对线程进行加锁保护
+@property (nonatomic, retain) NSCondition *condition; //用于对线程进行加锁保护
+@property (nonatomic, retain) NSLock *lock; //用于对线程进行加锁保护
+@property (nonatomic, strong) TicketManager *ticketManager; //票务管理
 
 @end
 
@@ -24,6 +27,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.ticketManager = [[TicketManager alloc] init];
     
     //用来检测主线程是否堵塞
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, 80)];
@@ -864,6 +869,10 @@
 
 - (void)click_lock{
     
+    NSLog(@"开始卖票");
+    [self.ticketManager startSale];
+    
+    /*
     //创建三个线程线程
     NSThread *thread_1 = [[NSThread alloc] initWithTarget:self selector:@selector(runThreadForUseingLock) object:nil];
     thread_1.name = @"thread_1";
@@ -881,16 +890,23 @@
     [thread_1 start];
     [thread_2 start];
     [thread_3 start];
+     */
     
 }
 
 
 - (void)click_pThread {
-    
-    [self isMainThread];
+//    [self isMainThread];
+    NSLog(@"我在主线程中执行");
     pthread_t queue;
+//    pthread_create : 创建任务的方法，
+    /*
+        第一个参数：pthread指针
+        第二个参数：可为空；
+        第三个参数：要在子线程中执行的代码
+        第四个参数：可为空；
+     */
     pthread_create(&queue, NULL, run_pThread, NULL);
-    
 }
 
 
@@ -907,7 +923,6 @@
     
     //初始化方法三 ： NSObject的内置方法，不能指定线程名称和优先级
 //    [self performSelectorInBackground:@selector(runThread1) withObject:nil];
-    
     
     //设置线程的优先级
     NSThread *thread2 = [[NSThread alloc] initWithTarget:self selector:@selector(runThread1) object:nil];
@@ -1007,11 +1022,12 @@
     }else{
         NSLog(@"当前线程是子线程");
     }
-    
 }
 
-// C 语言 函数
+// C 语言 函数定义方式
 void *run_pThread(void *data) {
+    NSLog(@"我在子线程中执行");
+    //一个模拟任务的执行
     for (int i = 0; i < 10 ; i ++) {
         sleep(1);
         NSLog(@"%d",i);
