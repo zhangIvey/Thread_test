@@ -742,14 +742,14 @@
     
     //注意事项一 ：在主队列中开启任务，任务只能是异步任务，否则系统就会崩溃。也就是说不能使用创建同步任务调用主队列
     
-    /* 错误例子如下：
-     dispatch_sync(dispatch_get_main_queue(), ^{
-        NSLog(@"回到主线程");
-     });
-     */
+//     //错误例子如下：
+//     dispatch_sync(dispatch_get_main_queue(), ^{
+//        NSLog(@"回到主线程");
+//     });
+    
     /*
     dispatch_async(dispatch_get_main_queue(), ^(){
-        //在主线程队列中开启同步任务
+        //在主线程队列中开启异步任务
         NSLog(@"开始子线程 ：task1");
         for (int i = 10; i <= 20 ; i ++) {
             sleep(1);
@@ -759,7 +759,7 @@
     });
     
     dispatch_async(dispatch_get_main_queue(), ^(){
-        //在主线程队列中开启同步任务
+        //在主线程队列中开启异步任务
         NSLog(@"开始子线程 ：task2");
         for (int i = 20; i <= 30 ; i ++) {
             sleep(1);
@@ -775,7 +775,7 @@
     });
     
     dispatch_async(dispatch_get_main_queue(), ^(){
-        //在主线程队列中开启同步任务
+        //在主线程队列中开启异步任务
         NSLog(@"开始子线程 ：task3");
         for (int i = 30; i <= 40 ; i ++) {
             sleep(1);
@@ -790,7 +790,7 @@
     });
     */
     
-    //GCD - 应用自创建串行队列 ——  解决场景：线程中的任务按照顺序来执行
+    //GCD - 应用自创建串行队列 ——  解决场景：线程中的任务按照顺序来执行，或者线程之前之前存在依赖关系。
     /*
         执行结果：
         情况一：如果队列中的任务都是同步任务 ——会堵塞主线程；
@@ -804,9 +804,9 @@
         3：在子线程中的任务会按照顺序依次执行
      
         情况三：如果队列中的任务有同步任务和异步任务 ——会堵塞主线程；
-        1：同步任务会在主线程中执行；且不会开启子线程；
-        2：异步任务会在开启的一个子线程中执行；
-        3：会造成主线程的堵塞
+        1：同步还是会在主线程中执行，造成主线程堵塞**
+        2：异步任务会开启子线程，并且异步任务在子线程中执行，此时不会造成主线程的堵塞**
+        3：无论是同步任务或者异步任务，所有任务都是按照顺序执行**
      
         总结：
         1：串行队列中的任务都是要按照顺序依次执行的；
@@ -815,6 +815,7 @@
      
      */
     
+    
     dispatch_queue_t serial = dispatch_queue_create("queue.costom", NULL); //创建串行队列
     dispatch_async(serial, ^{
         //在主线程队列中开启同步任务
@@ -822,25 +823,25 @@
         for (int i = 40; i <= 50 ; i ++) {
             sleep(1);
             NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
-            if (i == 50) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"回到主线程, task4");
-                });
-            }
+//            if (i == 50) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    NSLog(@"回到主线程, task4");
+//                });
+//            }
         }
     });
     
-    dispatch_async(serial, ^{
+    dispatch_sync(serial, ^{
         //在主线程队列中开启同步任务
         NSLog(@"开始子线程 ：task5");
         for (int i = 50; i <= 60 ; i ++) {
             sleep(1);
             NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
-            if (i == 60) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"回到主线程, task5");
-                });
-            }
+//            if (i == 60) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    NSLog(@"回到主线程, task5");
+//                });
+//            }
         }
     });
     
@@ -850,17 +851,13 @@
         for (int i = 60; i <= 70 ; i ++) {
             sleep(1);
             NSLog(@"当前线程名称：%@ ——%d",[NSThread currentThread].name,i);
-            if (i == 70) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"回到主线程, task6");
-                });
-            }
+//            if (i == 70) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    NSLog(@"回到主线程, task6");
+//                });
+//            }
         }
     });
-    
-    
-    
-    
     
     
     
