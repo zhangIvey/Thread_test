@@ -166,10 +166,10 @@
      注意事项：
      再设置依赖关系的时候要注意不要添加依赖关系形成闭环，出现互相依赖的情况，会导致程序不执行；
      */
-    [operation1 addDependency:operation5];
-    [operation5 addDependency:operation2];
-    [operation2 addDependency:operation4];
-    [operation4 addDependency:operation3];
+//    [operation1 addDependency:operation5];
+//    [operation5 addDependency:operation2];
+//    [operation2 addDependency:operation4];
+//    [operation4 addDependency:operation3];
 //    [operation3 addDependency:operation1];  这一点一定要注意，千万要捋顺彼此的依赖关系
     
     //一对多的依赖关系
@@ -494,25 +494,27 @@
         
     });
     */
+    
     //GCD - 解决场景：执行完多个异步任务之后才执行某一任务 （举例：在异步任务中发起多个获取网络图片的异步请求，等到图片都获取成功之后再进行UI界面的刷新）
     /*
         这种问题使用 dispatch_group_enter(grpupT);来解决，dispatch_group_enter 和 dispatch_group_leave 必须要成对出现；
         dispatch_group_enter ： 使用一种手动的方式将另外一个 block 以不同于 dispatch_group_async 的方式添加到线程组中。
         dispatch_group_leave ： 手动指示一个 block 块执行完毕。以一种不用于 dispatch_group_async 的方式离开线程组
      */
+    
     dispatch_queue_t queueT = dispatch_queue_create("group.queue", DISPATCH_QUEUE_CONCURRENT);//一个并发队列
     dispatch_group_t grpupT = dispatch_group_create();//一个线程组
     
     dispatch_group_async(grpupT, queueT, ^{
         NSLog(@"group——当前线程一");
         //模仿网络请求代码
-        dispatch_group_enter(grpupT);
+//        dispatch_group_enter(grpupT);
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             for (int i = 0; i < 10; i++) {
                 [NSThread sleepForTimeInterval:1];
                 NSLog(@"网络图片请求中 ···%d", i);
             }
-            dispatch_group_leave(grpupT);
+//            dispatch_group_leave(grpupT);
         });
         
     });
@@ -520,14 +522,14 @@
     dispatch_group_async(grpupT, queueT, ^{
         NSLog(@"group——当前线程二");
         //模仿网络请求代码
-        dispatch_group_enter(grpupT);
+//        dispatch_group_enter(grpupT);
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             for (int i = 0; i < 10; i++) {
                 [NSThread sleepForTimeInterval:1];
                 NSLog(@"网络图片2请求中 ···2_%d", i);
             }
-            dispatch_group_leave(grpupT);
+//            dispatch_group_leave(grpupT);
         });
         
     });
@@ -535,16 +537,17 @@
     dispatch_group_async(grpupT, queueT, ^{
         NSLog(@"group——当前线程三");
         //模仿网络请求代码
-        dispatch_group_enter(grpupT);
+//        dispatch_group_enter(grpupT);
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             for (int i = 0; i < 10; i++) {
                 [NSThread sleepForTimeInterval:1];
                 NSLog(@"网络图片3请求中 ···3_%d", i);
             }
-             dispatch_group_leave(grpupT);
+//             dispatch_group_leave(grpupT);
         });
        
     });
+
     
     
     dispatch_group_notify(grpupT, queueT, ^{
@@ -555,7 +558,7 @@
         });
         
     });
-   
+
     
     
     
@@ -663,8 +666,8 @@
             }
         }
     });
-    */
     
+    */
     
     
     //GCD - 应用自创建并行队列
@@ -684,6 +687,7 @@
         2：每个异步任务在自己对应的线程中执行；
         3：各个任务之间是并发执行的；
      */
+    
     dispatch_queue_t queue_concurrent = dispatch_queue_create("queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
     
     dispatch_async(queue_concurrent, ^{
