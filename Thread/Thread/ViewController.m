@@ -622,6 +622,7 @@
     });
     */
     
+    
     //组合二 ： 异步任务 + 全局队列 —— 不会堵塞主线程
     /*
         执行结果：
@@ -629,7 +630,7 @@
         2：可以通过设置优先级控制任务的执行优先顺序
         3：充分证明全局队列是并行队列
      */
-    /*
+    
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSLog(@"开始子线程 ：task4");
         for (int i = 10; i <= 20 ; i ++) {
@@ -667,7 +668,6 @@
         }
     });
     
-    */
     
     
     //GCD - 应用自创建并行队列
@@ -687,7 +687,7 @@
         2：每个异步任务在自己对应的线程中执行；
         3：各个任务之间是并发执行的；
      */
-    
+    /*
     dispatch_queue_t queue_concurrent = dispatch_queue_create("queue.concurrent", DISPATCH_QUEUE_CONCURRENT);
     
     dispatch_async(queue_concurrent, ^{
@@ -728,6 +728,7 @@
             }
         }
     });
+     */
     
 }
 
